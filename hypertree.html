@@ -1,0 +1,83 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.6.1/webcomponents.min.js"></script>
+  <link rel="import" href="fin-hypergrid.min.html">
+    <style>
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: rgba(0,0,0,.5);
+            -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+        }
+         html {
+            overflow: scroll;
+        }
+         body {
+            margin: 0;
+            padding: 0;
+         }
+         fin-hypergrid {
+            position: absolute;
+            top: 0%;
+            bottom: 0%;
+            left: 0%;
+            right: 0%;
+        }
+        .abs {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        table.qtreedescription td:nth-child(2n) {
+          color: blue;
+        }
+        #qtreebuttons {
+          background: #CFD3DD;
+        }
+        #qtreebuttons img {
+          margin-left: 8px;
+          margin-top: 3px;
+          cursor: pointer;
+        }
+        #qtreedescription {
+          background: #CFD3DD;
+        }
+    </style>
+</head>
+<body>
+
+<div class="abs">
+  <div class="abs" style="width:240px;bottom:24px" id="qtreebuttons">
+  </div>
+  <div class="abs" style="left:240px;bottom:24px" id="qtreedescription">
+  </div>
+  <div class="abs" style="top:24px">
+    <fin-hypergrid class="abs">
+        <fin-hypergrid-behavior-qtree id="qtree" url="ws://localhost:12345"></fin-hypergrid-behavior-qtree>
+    </fin-hypergrid>
+  </div>
+</div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const qTree = document.querySelector('#qtree');
+        const descriptionPanel = document.querySelector('#qtreedescription');
+
+        setInterval(function(){
+            descriptionPanel.innerHTML = qTree.getTreeStateDescription();
+        }, 500);
+
+        setTimeout(function() {
+            qTree.setButtonBarHolder(document.querySelector('#qtreebuttons'));
+        }, 1000);
+    });
+</script>
+</html>
