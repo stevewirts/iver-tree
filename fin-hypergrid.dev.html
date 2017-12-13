@@ -24605,11 +24605,11 @@ it contains all code/data that's necessary for easily implementing a virtual dat
          * @param {integer} x - the position in pixels
          */
         setScrollPositionX: function(x) {
-            this.getDataModel().setScrollPositionX(x);
+            this.scrollPositionX = x;
         },
 
         getScrollPositionX: function() {
-            return this.getDataModel().getScrollPositionX();
+            return this.scrollPositionX;
         },
 
         /**
@@ -24621,11 +24621,11 @@ it contains all code/data that's necessary for easily implementing a virtual dat
          * @param {integer} y - the position in pixels
          */
         setScrollPositionY: function(y) {
-            this.getDataModel().setScrollPositionY(y);
+            this.scrollPositionY = y;
         },
 
         getScrollPositionY: function() {
-            return this.getDataModel().getScrollPositionY();
+            return this.scrollPositionY;
         },
 
         /**
