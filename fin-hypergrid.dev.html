@@ -24605,11 +24605,11 @@ it contains all code/data that's necessary for easily implementing a virtual dat
          * @param {integer} x - the position in pixels
          */
         setScrollPositionX: function(x) {
-            this.scrollPositionX = x;
+            this.getDataModel().setScrollPositionX(x);
         },
 
         getScrollPositionX: function() {
-            return this.scrollPositionX;
+            return this.getDataModel().getScrollPositionX();
         },
 
         /**
@@ -24621,11 +24621,11 @@ it contains all code/data that's necessary for easily implementing a virtual dat
          * @param {integer} y - the position in pixels
          */
         setScrollPositionY: function(y) {
-            this.scrollPositionY = y;
+            this.getDataModel().setScrollPositionY(y);
         },
 
         getScrollPositionY: function() {
-            return this.scrollPositionY;
+            return this.getDataModel().getScrollPositionY();
         },
 
         /**
@@ -27738,6 +27738,8 @@ var validIdentifierMatch = /^(?!(?:abstract|boolean|break|byte|case|catch|char|c
             this.sortStates = ['', ' ^', ' v', ' |^|', ' |v|'];
             this.ws = null;
             this.reconnect();
+            this.scrollPositionY = 0;
+            this.scrollPositionX = 0;
         },
 
         /**
@@ -27855,16 +27857,21 @@ var validIdentifierMatch = /^(?!(?:abstract|boolean|break|byte|case|catch|char|c
             return 1;
         },
 
-        /**
-         * @function
-         * @instance
-         * @description
-         quietly set the scroll position in the horizontal dimension
-         * #### returns: type
-         * @param {integer} y - the position in pixels
-         */
+
+         getScrollPositionX: function() {
+          return this.scrollPositionX;
+         },
+
+         setScrollPositionX: function(x) {
+          this.scrollPositionX = x;
+         },
+
+         getScrollPositionY: function() {
+          return this.scrollPositionY;
+         },
+
         setScrollPositionY: function(y) {
-            if (this.scrollPositionY === y) {
+            if (this.getScrollPositionY() === y) {
                 return;
             }
             this.scrollPositionY = y;
