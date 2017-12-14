@@ -2,6 +2,7 @@
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.6.1/webcomponents.min.js"></script>
   <link rel="import" href="fin-hypergrid.dev.html">
+  <link rel="import" href="virtual-behavior-example.html">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -38,7 +39,7 @@
 <body>
 
 <fin-hypergrid class="abs" id="q-example">
-    <fin-hypergrid-behavior-q url="ws://localhost:5000" table="trade"></fin-hypergrid-behavior-q>
+    <virtual-behavior-example url="ws://localhost:5000" table="trade"></virtual-behavior-example>
 </fin-hypergrid>
 
 </body>
