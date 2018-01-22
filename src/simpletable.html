@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>vgrid</title>
+    <style>
+        .abs {
+            position: absolute;
+            top: 0%;
+            bottom: 0%;
+            left: 0%;
+            right: 0%;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <h1>Welcome to vgrid!</h1>
+    <div id="app" class="abs"></div>
+</main>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function(event) { 
+	    const app = document.querySelector('#app');
+	    const behavior = new VGrid.SimpleVirtualModel('ws://localhost:5000', 'trade');
+	    const vtable = new VGrid.VGrid(app, behavior);
+	});
+</script>
+
+</body>
+</html>

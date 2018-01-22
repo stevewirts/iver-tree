@@ -1,14 +1,204 @@
-<html><head>
-<polymer-element name="virtual-behavior-example" extends="fin-hypergrid-behavior-base" attributes="url" assetpath="/components/fin-hypergrid/polymer/html/behaviors/">
+<polymer-element name="fin-hypergrid-behavior-q" extends="fin-hypergrid-behavior-base" attributes="url" assetpath="/components/fin-hypergrid/polymer/html/behaviors/">
   <template>
     <style type="text/css">:host {
     display: block;
     position: relative;
-    }
-  </style>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
   </template>
   <script>'use strict';
+/**
+ *
+ * @module behaviors\q
+ * @description
+ fin-hypergrid-behavior-q is a datasource based on an external Q data source.
+<br>See [kx.com](http://www.kx.com)
+<br>Two example scripts are provided in the root of this project, bigtable.q and sorttable.q
+<br>bigtable.q simulates an unsortable 100MM row table, and sorttable.q provides a true randomly generated 1MM row table sortable on any column.
+<br>Run either of these scripts with this behavior.
+
+ *
+ */
+
 (function() {
+
+    //keys mapping Q datatypes to aligment and renderers are setup here.
+    //<br>see [q datatypes](http://code.kx.com/wiki/Reference/Datatypes) for more.
 
     var typeAlignmentMap = {
         j: 'right',
@@ -18,8 +208,32 @@
         d: 'center'
     };
 
-    Polymer('virtual-behavior-example',{
+    //there are 4 default cell renderer types to choose from at the moment
+    //<br>simpleCellRenderer, sliderCellRenderer, sparkbarCellRenderer, sparklineCellRenderer
+    // var typeRendererMap = {
+    //     J: 'sparklineCellRenderer',
+    //     j: 'simpleCellRenderer',
+    //     s: 'simpleCellRenderer',
+    //     t: 'simpleCellRenderer',
+    //     f: 'simpleCellRenderer',
+    //     d: 'simpleCellRenderer'
+    // };
 
+    //sort states are also the visual queues in the column headers
+    //* '' no sort
+    //* ^ sort ascending
+    //* v sort descending
+    //* |^| sort absolute value ascending
+    //* |v| sort absolute value descending
+
+    Polymer('fin-hypergrid-behavior-q',{ /* jslint ignore:line */
+
+        /**
+         * @function
+         * @instance
+         * @description
+         polymer lifecycle event
+         */
         ready: function() {
             this.block = {
                 data: [],
@@ -35,11 +249,44 @@
             this.scrollPositionX = 0;
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        polymer callback
+        * @param {string} attrName - the attribute name
+        * @param {string} oldVal - the old value
+        * @param {string} newVal - the new value
+        */
+        attributeChanged: function(attrName, oldVal, newVal) {
+            console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
+            if (attrName === 'url') {
+                this.reconnect();
+            }
+            if (attrName === 'table') {
+                //force a refresh of the data
+                this.setScrollPositionY(0);
+            }
+        },
+
+        /**
+        * @function
+        * @instance
+        * @description
+        connect to q at newUrl
+        * @param {string} newUrl - the url of the q server
+        */
         connectTo: function(newUrl) {
             this.setAttribute('url', newUrl);
             this.reconnect();
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        try reconnecting
+        */
         reconnect: function() {
             this.url = this.getAttribute('url');
             if (!this.url) {
@@ -50,6 +297,15 @@
             this.scrolled = false;
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the data value at coordinates x,y.  this is the main "model" function that allows for virtualization
+         * #### returns: Object
+         * @param {integer} x - the x coordinate
+         * @param {integer} y - the y coordinate
+         */
         getValue: function(x, y) {
             var override = this.dataUpdates['p_' + x + '_' + y];
             if (override) {
@@ -64,26 +320,54 @@
             }
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        empty out our page of local data, this function is used when we lose connectivity.  this function is primarily used as a visual queue so the user doesn't see stale data
+        */
         clearData: function() {
             this.block.rows = [];
             this.changed();
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the number of rows
+         * #### returns: integer
+         */
         getRowCount: function() {
             return this.block.rows;
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the total number of columns
+         * #### returns: integer
+         */
         getColumnCount: function() {
             return Math.max(0, this.block.headers.length - 1);
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the number of fixed columns
+         * #### returns: integer
+         */
         getFixedColumnCount: function() {
             return 1;
         },
 
-        getScrollPositionX: function() {
-            return this.scrollPositionX;
-        },
+
+         getScrollPositionX: function() {
+          return this.scrollPositionX;
+         },
 
          setScrollPositionX: function(x) {
           this.scrollPositionX = x;
@@ -116,6 +400,13 @@
             }));
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        return true if we are connected to q
+        * #### returns: boolean
+        */
         isConnected: function() {
             if (!this.ws) {
                 return false;
@@ -123,6 +414,15 @@
             return this.ws.readyState === this.ws.OPEN;
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the data value at point x,y in the fixed row area
+         * #### returns: Object
+         * @param {integer} x - x coordinate
+         * @param {integer} y - y coordinate
+         */
         getFixedRowValue: function(x) {
             if (!this.sorted[x + 1]) {
                 this.sorted[x + 1] = 0;
@@ -131,19 +431,50 @@
             return this.block.headers[x + 1][0] + sortIndicator;
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the column heading at colIndex
+         * #### returns: string
+         * @param {integer} colIndex - the column index of interest
+         */
         getHeader: function(x) {
             return this.block.headers[x + 1][0];
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the value at x,y for the fixed row area
+         * #### returns: Object
+         * @param {integer} x - x coordinate
+         * @param {integer} y - y coordinate
+         */
         getFixedColumnValue: function(x, y) {
             return y;
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        returns true if we support sorting
+        * #### returns: boolean
+        */
         getCanSort: function() {
             var canSort = this.block.features.sorting === true;
             return canSort;
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         toggle the sort at columnIndex to it's next state
+         * @param {integer} columnIndex - the column index of interest
+         */
         toggleSort: function(columnIndex) {
             if (!this.getCanSort()) {
                 return;
@@ -168,12 +499,28 @@
             this.ws.send(JSON.stringify(message));
         },
 
+        /**
+         * @function
+         * @instance
+         * @description
+         return the column alignment at column x
+         * #### returns: string ['left','center','right']
+         * @param {integer} x - the column index of interest
+         */
         getColumnAlignment: function(x) {
             var alignment = typeAlignmentMap[this.block.headers[x + 1][1]];
             return alignment;
         },
 
+        /**
+        * @function
+        * @instance
+        * @description
+        connect to q at newUrl
+        */
         connect: function() {
+            var d;
+            var oldSize;
             var self = this;
             var tableName = this.getAttribute('table');
             if (!tableName) {
@@ -202,14 +549,29 @@
                 this.ws.onclose = function() {
                     self.clearData();
                     console.log('disconnected from ' + this.url + ', trying to reconnect in a moment...');
+                    setTimeout(function() {
+                        //    self.connect();
+                    }, 2000);
                 };
                 this.ws.onmessage = function(e) {
-                    self.block = JSON.parse(e.data);
+                    d = JSON.parse(e.data);
+                    oldSize = self.block.rows;
+
+                    self.block = d;
+
+                    if (d.rows !== oldSize) {
+                        if (self.changed) {
+                            self.changed();
+                        }
+                    }
                     self.changed();
                 };
                 this.ws.onerror = function(e) {
                     self.clearData();
                     console.error('problem with connection to q at ' + this.url + ', trying again in a moment...', e.data);
+                    setTimeout(function() {
+                        //     self.connect();
+                    }, 2000);
                 };
             } else {
                 console.error('WebSockets not supported on your browser.');
@@ -218,7 +580,6 @@
 
     });
 
-})();
+})(); /* jslint ignore:line */
 </script>
 </polymer-element>
-</body></html>
