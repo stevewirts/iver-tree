@@ -31,25 +31,24 @@ const config = {
       { test: /\.html$/, use: ['html-loader'] },
       // sass-loader with sourceMap activated
       {
-        test: /\.scss$/,
-        include: [path.resolve(__dirname, 'src', 'assets', 'scss')],
-        use: extractPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
+          test: /\.scss$/,
+          use: [{
+              loader: "style-loader",
               options: {
                 sourceMap: true
               }
-            },
-            {
-              loader: 'sass-loader',
+          }, {
+              loader: "css-loader",
               options: {
                 sourceMap: true
               }
-            }
-          ],
-          fallback: 'style-loader'
-        })
+          }, {
+              loader: "sass-loader",
+              options: {
+                  includePaths: [path.resolve(__dirname, 'src', 'assets', 'scss')],
+                  sourceMap: true
+              }
+          }]
       },
       // file-loader(for images)
       { test: /\.(jpg|png|gif|svg)$/, use: [ { loader: 'file-loader', options: { name: '[name].[ext]', outputPath: './assets/media/' } } ] },

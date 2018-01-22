@@ -1389,31 +1389,31 @@ export default class VGrid {
 			self.sbMouseIsDown = true;
 		});
 
-		document.addEventListener('mouseup', function(e) {
-			noop(e);
-			if (!self.sbMouseIsDown) {
-				return;
-			}
-			self.sbMouseIsDown = false;
-			self.takeFocus();
-			var x = e.x || e.clientX;
-			var y = e.y || e.clientY;
-			// var elementAt = self.containerDiv.elementFromPoint(x, y);
-			var elementAt = document.elementFromPoint(x, y);
-			self.scrollBarHasMouse = (elementAt === self.sbVScroller || elementAt === self.sbHScroller);
-			if (!self.scrollBarHasMouse) {
-				var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
-				var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
-				if (!self.resolveProperty('scrollingEnabled')) {
-					hoverClassOver = 'hidden';
-					hoverClassOff = 'hidden';
-				}
-				self.sbVScroller.containerDiv.classList.remove(hoverClassOver);
-				self.sbHScroller.containerDiv.classList.remove(hoverClassOver);
-				self.sbVScroller.containerDiv.classList.add(hoverClassOff);
-				self.sbHScroller.containerDiv.classList.add(hoverClassOff);
-			}
-		});
+		// document.addEventListener('mouseup', function(e) {
+		// 	noop(e);
+		// 	if (!self.sbMouseIsDown) {
+		// 		return;
+		// 	}
+		// 	self.sbMouseIsDown = false;
+		// 	self.takeFocus();
+		// 	var x = e.x || e.clientX;
+		// 	var y = e.y || e.clientY;
+		// 	// var elementAt = self.containerDiv.elementFromPoint(x, y);
+		// 	var elementAt = document.elementFromPoint(x, y);
+		// 	self.scrollBarHasMouse = (elementAt === self.sbVScroller || elementAt === self.sbHScroller);
+		// 	if (!self.scrollBarHasMouse) {
+		// 		var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
+		// 		var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
+		// 		if (!self.resolveProperty('scrollingEnabled')) {
+		// 			hoverClassOver = 'hidden';
+		// 			hoverClassOff = 'hidden';
+		// 		}
+		// 		self.sbVScroller.containerDiv.classList.remove(hoverClassOver);
+		// 		self.sbHScroller.containerDiv.classList.remove(hoverClassOver);
+		// 		self.sbVScroller.containerDiv.classList.add(hoverClassOff);
+		// 		self.sbHScroller.containerDiv.classList.add(hoverClassOff);
+		// 	}
+		// });
 
 		this.sbHValueHolder = {
 			changed: false,
