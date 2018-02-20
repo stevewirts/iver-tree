@@ -4,14 +4,16 @@ import ModelBase from './assets/js/models/ModelBase.js';
 import SimpleVirtualModel from './assets/js/models/SimpleVirtualModel.js';
 import PassiveVirtualModel from './assets/js/models/PassiveVirtualModel.js';
 import QTreeModel from './assets/js/models/QTreeModel.js';
-import VGrid from './assets/js/VGrid.js';
+import IVGrid from './assets/js/VGrid.js';
 
-window.VGrid = {
-	VGrid,
+const VGrid = {
+	VGrid: IVGrid,
 	ModelBase,
 	SimpleVirtualModel,
 	PassiveVirtualModel,
 	QTreeModel
 }
 
-export default window.VGrid;
+window.VGrid = VGrid;
+
+export default VGrid;
