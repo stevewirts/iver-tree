@@ -13,6 +13,7 @@ import Rectangles from './Rectangles.js';
 
 const noop = function() {};
 const fontData = {};
+const RIGHT_BOUNDS_OFFSET = 0;
 let textWidthCache = new SimpleLRU(4000);
 
 const FOCUSLINESTEP = [
@@ -277,7 +278,7 @@ export default class VGridRenderer extends CanvasComponent {
 		var isMaxX = this.isLastColumnVisible();
 		var chop = isMaxX ? 2 : 1;
 		var colWall = this.renderedColumnWidths[this.renderedColumnWidths.length - chop];
-		var result = Math.min(colWall, this.getBounds().width() - 200);
+		var result = Math.min(colWall, this.getBounds().width() - RIGHT_BOUNDS_OFFSET);
 		return result;
 	}
 
@@ -492,7 +493,7 @@ export default class VGridRenderer extends CanvasComponent {
 
 		var scrollTop = this.getScrollTop();
 		var scrollLeft = this.getScrollLeft();
-		var viewWidth = this.getBounds().width() - 200; // look in fin-hypergrid and initializtion of fin-canvas
+		var viewWidth = this.getBounds().width() - RIGHT_BOUNDS_OFFSET; // look in fin-hypergrid and initializtion of fin-canvas
 		var viewHeight = this.getBounds().height();
 
 		gc.beginPath();
@@ -632,7 +633,7 @@ export default class VGridRenderer extends CanvasComponent {
 		var bgSelColor = this.resolveProperty('fixedRowBGSelColor');
 
 		var cellProvider = this.getGrid().getCellProvider();
-		var viewWidth = this.getBounds().width() - 200; // look in fin-hypergrid and initializtion of fin-canvas
+		var viewWidth = this.getBounds().width(); // - RIGHT_BOUNDS_OFFSET; // look in fin-hypergrid and initializtion of fin-canvas
 		var viewHeight = behavior.getFixedRowsHeight();
 
 		for (var c = 0; c < numColumns; c++) {
@@ -777,7 +778,7 @@ export default class VGridRenderer extends CanvasComponent {
 		var fgSelColor = this.resolveProperty('foregroundSelColor');
 		var bgSelColor = this.resolveProperty('backgroundSelColor');
 
-		var viewWidth = this.getBounds().width() - 200; // look in fin-hypergrid and initializtion of fin-canvas
+		var viewWidth = this.getBounds().width() - RIGHT_BOUNDS_OFFSET; // look in fin-hypergrid and initializtion of fin-canvas
 		var viewHeight = this.getBounds().height();
 
 		for (var c = 0; c < numColumns; c++) {
@@ -1049,7 +1050,7 @@ export default class VGridRenderer extends CanvasComponent {
 		var fgSelColor = this.resolveProperty('foregroundSelColor');
 		var bgSelColor = this.resolveProperty('backgroundSelColor');
 
-		//        var viewWidth = this.getBounds().width() - 200; // look in fin-hypergrid and initializtion of fin-canvas
+		//        var viewWidth = this.getBounds().width() - RIGHT_BOUNDS_OFFSET; // look in fin-hypergrid and initializtion of fin-canvas
 		//        var viewHeight = this.getBounds().height();
 
 		var columnAlign = behavior._getColumnAlignment(translatedX);

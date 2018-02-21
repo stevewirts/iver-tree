@@ -234,11 +234,7 @@ export default class Canvas {
 	initContainerDiv() {
 		const s = this.containerDiv.style;
 		s.overflow = 'hidden';
-		s.position = 'relative';
-		s.top = '0';
-		s.right = '0';
-		s.bottom = '0';
-		s.left = '0';
+		s.position = 'absolute';
 	}
 
 	dispatchEvent(event) {

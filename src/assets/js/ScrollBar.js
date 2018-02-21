@@ -7,52 +7,12 @@ const CONTENT = `
 
 const noop = function() {};
 
-const throttle = function(func, wait, options) {
-
-	var context, args, result;
-	var timeout = null;
-	var previous = 0;
-	if (!options) {
-		options = {};
-	}
-
-	var later = function() {
-		previous = options.leading === false ? 0 : Date.now();
-		timeout = null;
-		result = func.apply(context, args);
-		if (!timeout) {
-			context = args = null;
-		}
-	};
-
-	return function() {
-		var now = Date.now();
-		if (!previous && options.leading === false) {
-			previous = now;
-		}
-		var remaining = wait - (now - previous);
-		context = this;
-		args = arguments;
-		if (remaining <= 0 || remaining > wait) {
-			clearTimeout(timeout);
-			timeout = null;
-			previous = now;
-			result = func.apply(context, args);
-			if (!timeout) {
-				context = args = null;
-			}
-		} else if (!timeout && options.trailing !== false) {
-			timeout = setTimeout(later, remaining);
-		}
-		return result;
-	};
-};
+const STEPPING_INTERVAL = 200;
 
 export default class ScrollBar {
 
 	constructor(div, isHorizontal) {
 
-		var that = this;
 		this.isHorizontal = isHorizontal === true;
 		this.containerDiv = div;
 		this.containerDiv.innerHTML = CONTENT;
@@ -65,16 +25,77 @@ export default class ScrollBar {
 		this.gutter = this.containerDiv.querySelector('.scroll-bar-gutter');
 
 		this.stepUp = this.containerDiv.querySelector('.scroll-bar-up');
+		this.stepUpPressedNow = false;
+
 		this.stepDown = this.containerDiv.querySelector('.scroll-bar-down');
+		this.stepDownPressedNow = false;
 
 		this.configureOrientation();
 
-		//var bounds = that.bounds = that.getBoundingClientRect();
-		that.isScrolling = false;
+		//var bounds = this.bounds = this.getBoundingClientRect();
+		this.isScrolling = false;
 
-		that.attachThumbMouseDown()
-			.attachThumbMouseMove()
-			.attachThumbMouseUp();
+		this.attachStepUp();
+		this.attachStepDown();
+		this.attachThumbMouseDown();
+		this.attachThumbMouseMove();
+		this.attachThumbMouseUp();
+	}
+
+	attachStepUp() {
+		const self = this;
+		this.stepUp.addEventListener('mousedown', (event)=> {
+			self.stepUpPressed(true);
+		});
+		this.stepUp.addEventListener('mouseup', (event)=> {
+			self.stepUpPressed(false);
+		});
+		this.stepUp.addEventListener('mouseout', (event)=> {
+			self.stepUpPressed(false);
+		});
+	}
+
+	attachStepDown() {
+		const self = this;
+		this.stepDown.addEventListener('mousedown', (event)=> {
+			self.stepDownPressed(true);
+		});
+		this.stepDown.addEventListener('mouseup', (event)=> {
+			self.stepDownPressed(false);
+		});
+		this.stepDown.addEventListener('mouseout', (event)=> {
+			self.stepDownPressed(false);
+		});
+	}
+
+	stepUpPressed(bool) {
+		this.stepUpPressedNow = bool;
+		this.checkStepping();
+	}
+
+	stepDownPressed(bool) {
+		this.stepDownPressedNow = bool;
+		this.checkStepping();
+	}
+
+	checkStepping() {
+		const self = this;
+		if (this.stepUpPressedNow || this.stepDownPressedNow && !this.isStepping) {
+			this.step();
+		}
+	}
+
+	step() {
+		const self = this;
+		if (this.stepUpPressedNow) {
+			this.onUpClick();
+		}
+		if (this.stepDownPressedNow) {
+			this.onDownClick();
+		}
+		if (this.stepUpPressedNow || this.stepDownPressedNow) {
+			setTimeout(()=>self.step(), STEPPING_INTERVAL);		
+		}
 	}
 
 	setRangeAdapter(rangeAdapter) {

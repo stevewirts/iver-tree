@@ -1,6 +1,10 @@
 @import '_color';
 /* cssnext: CSS variables */
  
+.vgrid-canvas {
+
+} 
+
 .visible {
     opacity: 0.75;
 }
@@ -11,20 +15,22 @@
 
 .verticalScroller {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
     left: 100%;
-    margin: 0 15px 15px -15px;
+    bottom: 15px;
+    right: 0;
+    top: 0;
+    margin-left: -15px;
+    background-color: #E7E7E7;
 }
 
 .horizontalScroller {
     position: absolute;
     top: 100%;
-    right: 0;
+    right: 15px;
     bottom: 0;
     left: 0;
-    margin: -15px 15px 15px 0;
+    margin-top: -15px;
+    background-color: #E7E7E7;
 }
 
 .editor {
@@ -41,50 +47,28 @@
 }
 
 .scroll-bar {
-    opacity: 0.0;
     -webkit-transition: opacity 500ms;
     -moz-transition: opacity 500ms;
     -ms-transition: opacity 500ms;
     -o-transition: opacity 500ms;
     transition: opacity 500ms;
     z-index: 10;
-
-	width: 13px;
-	position: absolute;
-	top:0;
-	bottom:0;
-	background-color: #E7E7E7;
-	border: 1px solid #DDDDDD;
-}
-.scroll-bar-gutter {
-	position: absolute;
-	top: 0%;
-	bottom: 0%;
-	right: 0%;
-	left: 0%;
-	margin-top: 15px;
-	margin-bottom: 35px;
-	border-radius:4px;
-}
-.scroll-bar.horizontal {
-	height: 13px;
-	width: 100%;
-	position: absolute;
-	left:0;
-	right: 100%;
-	top:100%;
 }
 
-.horizontal .scroll-bar-gutter {
+.horizontalScroller > .scroll-bar-gutter {
 	position: absolute;
-	top: 0%;
-	bottom: 0%;
-	right: 0%;
-	left: 0%;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-left: 15px;
-	margin-right: 34px;
+	height: 15px;
+	right: 34px;
+	left: 15px;
+	border-radius: 4px;
+}
+
+.verticalScroller > .scroll-bar-gutter {
+	position: absolute;
+	width: 15px;
+	bottom: 34px;
+	top: 15px;
+	border-radius: 4px;
 }
 
 .scroll-bar-up {
@@ -106,7 +90,7 @@
 .scroll-bar.horizontal .scroll-bar-up {
 	position: absolute;
 	top: 1px;
-	right: 1px;
+	right: 0px;
 	left: auto;
 	width: 12px;
 	height: 12px;

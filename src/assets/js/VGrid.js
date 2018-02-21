@@ -4,11 +4,12 @@ import ScrollBar from './ScrollBar.js';
 import Rectangles from './Rectangles.js';
 import SelectionModel from './SelectionModel.js';
 
+const RIGHT_BOUNDS_OFFSET = 0;
 
 const CONTENT = `
 	<div class="scroll-bar horizontalScroller"></div>
 	<div class="scroll-bar verticalScroller"></div>
-	<div class="canvas"></div>
+	<div class="vgrid-canvas"></div>
 	
 	<input class="editor">`;
 
@@ -30,130 +31,68 @@ const initializeCellEditor = function(name) {
 	globalCellEditors[cellEditor.alias] = cellEditor;
 };
 
-const defaultProperties = function() {
-	const properties = {
-		//these are for the theme
-		font: '13px Tahoma, Geneva, sans-serif',
-		color: 'rgb(25, 25, 25)',
-		backgroundColor: 'rgb(241, 241, 241)',
-		foregroundSelColor: 'rgb(25, 25, 25)',
-		backgroundSelColor: 'rgb(183, 219, 255)',
+const DEFAULT_PROPERTIES = {
+	//these are for the theme
+	font: '13px Tahoma, Geneva, sans-serif',
+	color: 'rgb(25, 25, 25)',
+	backgroundColor: 'rgb(241, 241, 241)',
+	foregroundSelColor: 'rgb(25, 25, 25)',
+	backgroundSelColor: 'rgb(183, 219, 255)',
 
-		topLeftFont: '12px Tahoma, Geneva, sans-serif',
-		topLeftColor: 'rgb(25, 25, 25)',
-		topLeftBackgroundColor: 'rgb(223, 227, 232)',
-		topLeftFGSelColor: 'rgb(25, 25, 25)',
-		topLeftBGSelColor: 'rgb(255, 220, 97)',
+	topLeftFont: '12px Tahoma, Geneva, sans-serif',
+	topLeftColor: 'rgb(25, 25, 25)',
+	topLeftBackgroundColor: 'rgb(223, 227, 232)',
+	topLeftFGSelColor: 'rgb(25, 25, 25)',
+	topLeftBGSelColor: 'rgb(255, 220, 97)',
 
-		fixedColumnFont: '12px Tahoma, Geneva, sans-serif',
-		fixedColumnColor: 'rgb(25, 25, 25)',
-		fixedColumnBackgroundColor: 'rgb(223, 227, 232)',
-		fixedColumnFGSelColor: 'rgb(25, 25, 25)',
-		fixedColumnBGSelColor: 'rgb(255, 220, 97)',
+	fixedColumnFont: '12px Tahoma, Geneva, sans-serif',
+	fixedColumnColor: 'rgb(25, 25, 25)',
+	fixedColumnBackgroundColor: 'rgb(223, 227, 232)',
+	fixedColumnFGSelColor: 'rgb(25, 25, 25)',
+	fixedColumnBGSelColor: 'rgb(255, 220, 97)',
 
-		fixedRowFont: '12px Tahoma, Geneva, sans-serif',
-		fixedRowColor: 'rgb(25, 25, 25)',
-		fixedRowBackgroundColor: 'rgb(223, 227, 232)',
-		fixedRowFGSelColor: 'rgb(25, 25, 25)',
-		fixedRowBGSelColor: 'rgb(255, 220, 97)',
+	fixedRowFont: '12px Tahoma, Geneva, sans-serif',
+	fixedRowColor: 'rgb(25, 25, 25)',
+	fixedRowBackgroundColor: 'rgb(223, 227, 232)',
+	fixedRowFGSelColor: 'rgb(25, 25, 25)',
+	fixedRowBGSelColor: 'rgb(255, 220, 97)',
 
-		backgroundColor2: 'rgb(201, 201, 201)',
-		voffset: 0,
-		scrollbarHoverOver: 'visible',
-		scrollbarHoverOff: 'hidden',
-		scrollingEnabled: true,
+	backgroundColor2: 'rgb(201, 201, 201)',
+	voffset: 0,
+	scrollbarHoverOver: 'visible',
+	scrollbarHoverOff: 'hidden',
+	scrollingEnabled: true,
 
-		//these used to be in the constants element
-		fixedRowAlign: 'center',
-		fixedColAlign: 'center',
-		cellPadding: 5,
-		gridLinesH: true,
-		gridLinesV: true,
-		lineColor: 'rgb(199, 199, 199)',
-		lineWidth: 0.4,
+	//these used to be in the constants element
+	fixedRowAlign: 'center',
+	fixedColAlign: 'center',
+	cellPadding: 5,
+	gridLinesH: true,
+	gridLinesV: true,
+	lineColor: 'rgb(199, 199, 199)',
+	lineWidth: 0.4,
 
-		defaultRowHeight: 20,
-		defaultFixedRowHeight: 20,
-		defaultColumnWidth: 100,
-		defaultFixedColumnWidth: 100,
+	defaultRowHeight: 20,
+	defaultFixedRowHeight: 20,
+	defaultColumnWidth: 100,
+	defaultFixedColumnWidth: 100,
 
-		//for immediate painting, set these values to 0, true respectively
-		repaintIntervalRate: 60,
-		repaintImmediately: false,
+	//for immediate painting, set these values to 0, true respectively
+	repaintIntervalRate: 60,
+	repaintImmediately: false,
 
-		//enable or disable double buffering
-		useBitBlit: false,
+	//enable or disable double buffering
+	useBitBlit: false,
 
-		useHiDPI: true,
-		editorActivationKeys: ['alt', 'esc'],
-		columnAutosizing: true,
-		readOnly: false,
-		autoScrollAcceleration: true
-
-	};
-	return properties;
+	useHiDPI: true,
+	editorActivationKeys: ['alt', 'esc'],
+	columnAutosizing: true,
+	readOnly: false,
+	autoScrollAcceleration: true
 };
 
-const buildPolymerTheme = function() {
-	clearObjectProperties(polymerTheme);
-	let pb = document.createElement('paper-button');
 
-	pb.style.display = 'none';
-	pb.setAttribute('disabled', true);
-	document.body.appendChild(pb);
-	let p = window.getComputedStyle(pb);
-
-	let section = document.createElement('section');
-	section.style.display = 'none';
-	section.setAttribute('hero', true);
-	document.body.appendChild(section);
-
-	let h = window.getComputedStyle(document.querySelector('html'));
-	let hb = window.getComputedStyle(document.querySelector('html, body'));
-	let s = window.getComputedStyle(section);
-
-	polymerTheme.fixedRowBackgroundColor = p.color;
-	polymerTheme.fixedColumnBackgroundColor = p.color;
-	polymerTheme.topLeftBackgroundColor = p.color;
-	polymerTheme.lineColor = p.backgroundColor;
-
-	polymerTheme.backgroundColor2 = hb.backgroundColor;
-
-	polymerTheme.color = h.color;
-	polymerTheme.fontFamily = h.fontFamily;
-	polymerTheme.backgroundColor = s.backgroundColor;
-
-	pb.setAttribute('disabled', false);
-	pb.setAttribute('secondary', true);
-	pb.setAttribute('raised', true);
-	p = window.getComputedStyle(pb);
-
-	polymerTheme.fixedRowColor = p.color;
-	polymerTheme.fixedColumnColor = p.color;
-	polymerTheme.topLeftColor = p.color;
-
-
-	polymerTheme.backgroundSelColor = p.backgroundColor;
-	polymerTheme.foregroundSelColor = p.color;
-
-	pb.setAttribute('secondary', false);
-	pb.setAttribute('warning', true);
-
-	polymerTheme.fixedRowFGSelColor = p.color;
-	polymerTheme.fixedRowBGSelColor = p.backgroundColor;
-	polymerTheme.fixedColumnFGSelColor = p.color;
-	polymerTheme.fixedColumnBGSelColor = p.backgroundColor;
-
-	//check if there is actually a theme loaded if not, clear out all bogus values
-	//from my cache
-	if (polymerTheme.fixedRowBGSelColor === 'rgba(0, 0, 0, 0)' ||
-		polymerTheme.lineColor === 'transparent') {
-		clearObjectProperties(polymerTheme);
-	}
-
-	document.body.removeChild(pb);
-	document.body.removeChild(section);
-};
+const GLOBAL_PROPERTIES = Object.create(DEFAULT_PROPERTIES);
 
 const clearObjectProperties = function(obj) {
 	for (let prop in obj) {
@@ -163,18 +102,13 @@ const clearObjectProperties = function(obj) {
 	}
 };
 
-let defaults, polymerTheme, globalProperties;
-
-(function() {
-	defaults = defaultProperties();
-	polymerTheme = Object.create(defaults);
-	globalProperties = Object.create(polymerTheme);
-})();
 
 export default class VGrid {
 
 	constructor(div, behavior) {
-		this.containerDiv = div;
+		this.viewportDiv = div;
+		this.containerDiv = document.createElement('div');
+		this.viewportDiv.appendChild(this.containerDiv);
 		this.initContainerDiv();
 		this.isWebkit = true;
 		this.mouseDown = [];
@@ -201,13 +135,12 @@ export default class VGrid {
 
 		if (!propertiesInitialized) {
 			propertiesInitialized = true;
-			buildPolymerTheme();
 			initializeBasicCellEditors();
 		}
 
 		var self = this;
 
-		this.lnfProperties = Object.create(globalProperties);
+		this.lnfProperties = Object.create(GLOBAL_PROPERTIES);
 
 		this.isWebkit = navigator.userAgent.toLowerCase().indexOf('webkit') > -1;
 		this.selectionModel = new SelectionModel(this);
@@ -236,7 +169,7 @@ export default class VGrid {
 
 		//initialize our various pieces
 		this.containerDiv.innerHTML = CONTENT;
-		this.initCanvas();
+		this.createCanvas();
 		this.initScrollbars();
 
 		this.checkScrollbarVisibility();
@@ -254,11 +187,12 @@ export default class VGrid {
 
 	initContainerDiv() {
 		const s = this.containerDiv.style;
-		// s.position = 'relative';
-		// s.top = '0';
-		// s.right = '0';
-		// s.bottom = '0';
-		// s.left = '0';
+		s.position = 'absolute';
+		s.top = '0';
+		s.right = '0';
+		s.bottom = '0';
+		s.left = '0';
+		s.overflow = 'hidden';
 		// s.display = 'inline-block';
 		s.webkitUserSelect = 'none';
 		s.mozUserSelect = 'none';
@@ -285,16 +219,23 @@ export default class VGrid {
 		var hoverClassOff = this.resolveProperty('scrollbarHoverOff');
 
 		if (hoverClassOff === 'visible') {
-			this.sbHScroller.containerDiv.classList.remove(hoverClassOver);
-			this.sbVScroller.containerDiv.classList.remove(hoverClassOver);
-			this.sbHScroller.containerDiv.classList.remove(hoverClassOff);
-			this.sbVScroller.containerDiv.classList.remove(hoverClassOff);
+			// this.sbHScroller.containerDiv.classList.remove(hoverClassOver);
+			// this.sbVScroller.containerDiv.classList.remove(hoverClassOver);
+			// this.sbHScroller.containerDiv.classList.remove(hoverClassOff);
+			// this.sbVScroller.containerDiv.classList.remove(hoverClassOff);
 			this.sbHScroller.containerDiv.classList.remove('visible');
 			this.sbVScroller.containerDiv.classList.remove('visible');
 			this.sbHScroller.containerDiv.classList.remove('hidden');
 			this.sbVScroller.containerDiv.classList.remove('hidden');
 			this.sbHScroller.containerDiv.classList.add('visible');
 			this.sbVScroller.containerDiv.classList.add('visible');
+		} else {
+			this.sbHScroller.containerDiv.classList.remove('hidden');
+			this.sbVScroller.containerDiv.classList.remove('hidden');
+			this.sbHScroller.containerDiv.classList.remove('visible');
+			this.sbVScroller.containerDiv.classList.remove('visible');
+			this.sbHScroller.containerDiv.classList.add('hidden');
+			this.sbVScroller.containerDiv.classList.add('hidden');			
 		}
 	}
 
@@ -344,24 +285,12 @@ export default class VGrid {
 	}
 
 	addGlobalProperties(properties) {
-		//we check for existence to avoid race condition in initialization
-		if (!globalProperties) {
-			var self = this;
-			setTimeout(function() {
-				self.addGlobalProperties(properties);
-			}, 10);
-		} else {
-			this._addGlobalProperties(properties);
-		}
-
-	}
-
-	_addGlobalProperties(properties) {
 		for (var key in properties) {
 			if (properties.hasOwnProperty(key)) {
-				globalProperties[key] = properties[key];
+				GLOBAL_PROPERTIES[key] = properties[key];
 			}
 		}
+		this.refreshProperties();
 	}
 
 	addProperties(properties) {
@@ -379,11 +308,34 @@ export default class VGrid {
 	}
 
 	refreshCanvas() {
-		var fps = this.resolveProperty('repaintIntervalRate');
-		var interval = fps === undefined ? 15 : fps;
-		var useBitBlit = this.resolveProperty('useBitBlit') === true;
+		const self = this;
+		const fps = this.resolveProperty('repaintIntervalRate');
+		const interval = fps === undefined ? 15 : fps;
+		const useBitBlit = this.resolveProperty('useBitBlit') === true;
+		const canvasDiv = this.containerDiv.querySelector('.vgrid-canvas');
+		canvasDiv.style.position = 'absolute';
+		canvasDiv.style.top = 0;
+		canvasDiv.style.right = (-RIGHT_BOUNDS_OFFSET) + 'px';
+		//leave room for the vertical scrollbar
+		//style.marginRight = '15px';
+		canvasDiv.style.bottom = 0; //'7px';
+		//leave room for the horizontal scrollbar
+		//style.marginBottom = '15px';
+		canvasDiv.style.left = 0;
+
 		this.renderer = new VGridRenderer(this);
-		this.canvas = new Canvas(this.containerDiv.querySelector('.canvas'), this.renderer, interval, useBitBlit);
+		this.canvas = new Canvas(canvasDiv, this.renderer, interval, useBitBlit);
+		this.canvas.isHiDPI = function() {
+			return self.isHiDPI();
+		};
+
+		this.canvas.resizeNotification = function() {
+			self.resized();
+		};
+
+		this.canvas.getBoundingClientRect = function() {
+			return self.viewportDiv.getBoundingClientRect();
+		};
 	}
 
 	getState() {
@@ -648,34 +600,11 @@ export default class VGrid {
 		return this.resolveProperty('autoScrollAcceleration') !== false;
 	}
 
-	initCanvas() {
+	createCanvas() {
 
 		var self = this;
 		this.refreshCanvas();
-
-		//this.containerDiv.appendChild(domCanvas);
-
-		//this.canvas = this.containerDiv.querySelector('canvas');
-
-		//proxy the hidpi attribute through to the canvas
-		this.canvas.isHiDPI = function() {
-			return self.isHiDPI();
-		};
-
-		this.canvas.containerDiv.style.position = 'absolute';
-		this.canvas.containerDiv.style.top = 0;
-		this.canvas.containerDiv.style.right = '-200px';
-		//leave room for the vertical scrollbar
-		//this.canvas.style.marginRight = '15px';
-		this.canvas.containerDiv.style.bottom = '7px';
-		//leave room for the horizontal scrollbar
-		//this.canvas.style.marginBottom = '15px';
-		this.canvas.containerDiv.style.left = 0;
-
-		this.canvas.resizeNotification = function() {
-			self.resized();
-		};
-
+		
 		this.addFinEventListener('canvas-mousemove', function(e) {
 			if (self.resolveProperty('readOnly')) {
 				return;
@@ -930,7 +859,7 @@ export default class VGrid {
 	}
 
 	getDataBounds() {
-		var colDNDHackWidth = 200; //this was a hack to help with column dnd, need to factor this into a shared variable
+		var colDNDHackWidth = RIGHT_BOUNDS_OFFSET; //this was a hack to help with column dnd, need to factor this into a shared variable
 		var behavior = this.getBehavior();
 		var b = this.canvas.bounds;
 
@@ -1299,69 +1228,6 @@ export default class VGrid {
 			self.isScrollButtonClick = true;
 		};
 
-		this.sbHScroller.onmouseover = function(event) {
-			noop(event);
-			self.isScrollButtonClick = false;
-			var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
-			var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
-			if (!self.resolveProperty('scrollingEnabled')) {
-				hoverClassOver = 'hidden';
-				hoverClassOff = 'hidden';
-			}
-			self.sbHScroller.containerDiv.classList.remove(hoverClassOff);
-			self.sbHScroller.containerDiv.classList.add(hoverClassOver);
-		};
-
-		this.sbHScroller.onmouseout = function(event) {
-			noop(event);
-			if (self.sbMouseIsDown) {
-				return;
-			} else {
-				var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
-				var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
-				if (!self.resolveProperty('scrollingEnabled')) {
-					hoverClassOver = 'hidden';
-					hoverClassOff = 'hidden';
-				}
-				self.sbHScroller.containerDiv.classList.remove(hoverClassOver);
-				self.sbHScroller.containerDiv.classList.add(hoverClassOff);
-			}
-		};
-
-
-		this.sbVScroller.onmouseover = function(event) {
-			noop(event);
-			self.isScrollButtonClick = false;
-			var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
-			var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
-			if (!self.resolveProperty('scrollingEnabled')) {
-				hoverClassOver = 'hidden';
-				hoverClassOff = 'hidden';
-			}
-			self.sbVScroller.containerDiv.classList.remove(hoverClassOff);
-			self.sbVScroller.containerDiv.classList.add(hoverClassOver);
-		};
-
-		this.sbVScroller.onmouseout = function(event) {
-			noop(event);
-			if (self.sbMouseIsDown) {
-				return;
-			} else {
-				var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
-				var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
-				if (!self.resolveProperty('scrollingEnabled')) {
-					hoverClassOver = 'hidden';
-					hoverClassOff = 'hidden';
-				}
-				self.sbVScroller.containerDiv.classList.remove(hoverClassOver);
-				self.sbVScroller.containerDiv.classList.add(hoverClassOff);
-			}
-		};
-
-		this.addEventListener('mousedown', function() {
-			self.sbMouseIsDown = true;
-		});
-
 
 		this.sbVScroller.onUpClick = function() {
 			self.scrollVBy(-1);
@@ -1496,7 +1362,7 @@ export default class VGrid {
 			return;
 		}
 		var scrollableHeight = bounds.height() - behavior.getFixedRowsHeight();
-		var scrollableWidth = bounds.width() - behavior.getFixedColumnsMaxWidth() - 200;
+		var scrollableWidth = bounds.width() - behavior.getFixedColumnsMaxWidth() - RIGHT_BOUNDS_OFFSET;
 
 		var lastPageColumnCount = 0;
 		var columnsWidth = 0;

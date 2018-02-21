@@ -99,6 +99,8 @@ export default class ModelBase {
 		this.renderedColumnCount = 30;
 		this.renderedRowCount = 60;
 		this.dataUpdates = {};
+		this.scrollPositionX = 0;
+		this.scrollPositionY = 0;
 	}
 
 	getState() {
@@ -745,19 +747,19 @@ export default class ModelBase {
 	}
 
 	setScrollPositionX(x) {
-		this.getDataModel().setScrollPositionX(x);
+	  this.scrollPositionX = x;
 	}
 
 	getScrollPositionX() {
-		return this.getDataModel().getScrollPositionX();
+		return this.scrollPositionX;
 	}
 
 	setScrollPositionY(y) {
-		this.getDataModel().setScrollPositionY(y);
+	  this.scrollPositionY = y;
 	}
 
 	getScrollPositionY() {
-		return this.getDataModel().getScrollPositionY();
+		return this.scrollPositionY;
 	}
 
 	getFixedRowAlignment(x, y) {
