@@ -324,6 +324,9 @@ export default class VGrid {
 		canvasDiv.style.left = 0;
 
 		this.renderer = new VGridRenderer(this);
+		if (this.canvas) {
+			this.canvas.destroy(); // free up the old one
+		}
 		this.canvas = new Canvas(canvasDiv, this.renderer, interval, useBitBlit);
 		this.canvas.isHiDPI = function() {
 			return self.isHiDPI();

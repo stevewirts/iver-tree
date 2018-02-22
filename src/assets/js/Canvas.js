@@ -121,6 +121,7 @@ export default class Canvas {
 	constructor(div, renderer, fps, useBitBlit) {
 		this.renderer = renderer;
 		this.containerDiv = div;
+		this.listeners = [];
 		this.initContainerDiv();
 		this.containerDiv.innerHTML = CONTENT;
 		this.buttonDiv = this.containerDiv.querySelector('button');
@@ -170,42 +171,43 @@ export default class Canvas {
 		this.containerDiv.onmouseover = function() {
 			self.hasMouse = true;
 		};
-		document.addEventListener('mousemove', function(e) {
+
+		this.addGenericListener(document, 'mousemove', function(e) {
 			if (!self.hasMouse && !self.isDragging()) {
 				return;
 			}
 			self.mousemove(e);
 		});
-		document.addEventListener('mouseup', function(e) {
+		this.addGenericListener(document, 'mouseup', function(e) {
 			self.mouseup(e);
 		});
-		document.addEventListener('wheel', function(e) {
+		this.addGenericListener(document, 'wheel', function(e) {
 			self.wheelmoved(e);
 		});
+		this.addGenericListener(document, 'keydown', function(e) {
+			self.keydown(e);
+		});
+		this.addGenericListener(document, 'keyup', function(e) {
+			self.keyup(e);
+		});
 
-		this.focuser.addEventListener('focus', function(e) {
+		this.addGenericListener(this.focuser, 'focus', function(e) {
 			self.focusgained(e);
 		});
-		this.focuser.addEventListener('blur', function(e) {
+		this.addGenericListener(this.focuser, 'blur', function(e) {
 			self.focuslost(e);
 		});
-		this.addEventListener('mousedown', function(e) {
+		this.addGenericListener(this, 'mousedown', function(e) {
 			self.mousedown(e);
 		});
-		this.addEventListener('mouseout', function(e) {
+		this.addGenericListener(this, 'mouseout', function(e) {
 			self.hasMouse = false;
 			self.mouseout(e);
 		});
-		document.addEventListener('keydown', function(e) {
-			self.keydown(e);
-		});
-		document.addEventListener('keyup', function(e) {
-			self.keyup(e);
-		});
-		this.addEventListener('click', function(e) {
+		this.addGenericListener(this, 'click', function(e) {
 			self.click(e);
 		});
-		this.addEventListener('contextmenu', function(e) {
+		this.addGenericListener(this, 'contextmenu', function(e) {
 			self.contextmenu(e);
 		});
 		// this.addEventListener('dblclick', function(e) {
@@ -218,6 +220,21 @@ export default class Canvas {
 
 	}
 	
+	addGenericListener(target, type, listener) {
+		this.listeners.push({
+			target,
+			type,
+			listener
+		});
+		target.addEventListener(type, listener);
+	}
+
+	destroy() {
+		this.listeners.forEach(e=>{
+			e.target.removeEventListener(e.type, e.listener);
+		});
+	}
+
 	initButtonDiv() {
 		const s = this.buttonDiv.style;
 		s.position = 'fixed';
@@ -243,6 +260,10 @@ export default class Canvas {
 
 	addEventListener(eventName, callback) {
 		this.containerDiv.addEventListener(eventName, callback);
+	}
+
+	removeEventListener(eventName, callback) {
+		this.containerDiv.removeEventListener(eventName, callback);
 	}
 
 	appendChild(node) {
