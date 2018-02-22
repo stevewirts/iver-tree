@@ -149,8 +149,6 @@ export default class VGrid {
 
 		//prevent the default context menu for appearing
 		this.oncontextmenu = function(event) {
-			event.preventDefault();
-			return false;
 		};
 
 
@@ -199,7 +197,13 @@ export default class VGrid {
 		s.msUserSelect = 'none';
 		s.oUserSelect = 'none';
 		s.userSelect = 'none';
-		s.overflow = 'hidden';
+		s.overflow = 'hidden'
+
+		this.containerDiv.oncontextmenu = (e) => {
+			event.preventDefault();
+			this.oncontextmenu(e);
+			return false;
+		}
 	}
 
 	addEventListener(eventName, callback) {

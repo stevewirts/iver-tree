@@ -23,6 +23,9 @@
 	    const app = document.querySelector('#app');
 	    const behavior = new VGrid.SimpleVirtualModel('ws://localhost:5000', 'trade');
 	    const vtable = new VGrid.VGrid(app, behavior);
+        // vtable.oncontextmenu = (evt) => {
+        //     console.dir(evt);
+        // };
         vtable.addGlobalProperties({scrollbarHoverOff: 'visible'});
 	});
 </script>
