@@ -101,6 +101,7 @@ export default class ModelBase {
 		this.dataUpdates = {};
 		this.scrollPositionX = 0;
 		this.scrollPositionY = 0;
+		this.sortStates = ['', ' ↑', ' ↓', ' |↑|', ' |↓|'];
 	}
 
 	getState() {
