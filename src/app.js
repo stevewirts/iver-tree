@@ -1,4 +1,4 @@
-import './assets/scss/app.scss';
+import './assets/css/app.css';
 
 import ModelBase from './assets/js/models/ModelBase.js';
 import SimpleVirtualModel from './assets/js/models/SimpleVirtualModel.js';

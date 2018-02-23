@@ -31,7 +31,7 @@ const config = {
       { test: /\.html$/, use: ['html-loader'] },
       // sass-loader with sourceMap activated
       {
-          test: /\.scss$/,
+          test: /\.css$/,
           use: [{
               loader: "style-loader",
               options: {
@@ -40,12 +40,7 @@ const config = {
           }, {
               loader: "css-loader",
               options: {
-                sourceMap: true
-              }
-          }, {
-              loader: "sass-loader",
-              options: {
-                  includePaths: [path.resolve(__dirname, 'src', 'assets', 'scss')],
+                  includePaths: [path.resolve(__dirname, 'src', 'assets', 'css')],
                   sourceMap: true
               }
           }]
