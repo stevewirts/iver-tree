@@ -97,7 +97,7 @@ export default class ColumnMoving extends FeatureBase {
 			this.endDragColumn(grid);
 			setTimeout(function() {
 				self.attachChain();
-			} 200);
+			}, 200);
 		}
 		this.dragCol = -1;
 		this.dragging = false;
@@ -186,7 +186,7 @@ export default class ColumnMoving extends FeatureBase {
 					d.style.display = 'none';
 					self.isFloatingNow = false;
 				});
-			} columnAnimationTime + 50);
+			}, columnAnimationTime + 50);
 		};
 	}
 
@@ -204,10 +204,10 @@ export default class ColumnMoving extends FeatureBase {
 		var scrollLeft = grid.getHScrollValue();
 		var numFixedColumns = grid.getFixedColumnCount();
 		var columnWidth = columnIndex < 0 ? grid.getFixedColumnWidth(numFixedColumns + columnIndex + scrollLeft) : grid.getColumnWidth(columnIndex + scrollLeft);
-		var colHeight = grid.clientHeight;
+		var location = grid.getBoundingClientRect();
+		var colHeight = location.height;
 		var d = floatColumn;
 		var style = d.style;
-		var location = grid.getBoundingClientRect();
 
 		style.top = (location.top - 2) + 'px';
 		style.left = location.left + 'px';
@@ -262,12 +262,11 @@ export default class ColumnMoving extends FeatureBase {
 		var scrollLeft = grid.getHScrollValue();
 		var numFixedColumns = grid.getFixedColumnCount();
 		var hdpiRatio = grid.getHiDPI(draggerCTX);
-
 		var columnWidth = columnIndex < 0 ? grid.getFixedColumnWidth(numFixedColumns + columnIndex + scrollLeft) : grid.getColumnWidth(columnIndex + scrollLeft);
-		var colHeight = grid.clientHeight;
+		var location = grid.getBoundingClientRect();
+		var colHeight = location.height;
 		var d = dragger;
 
-		var location = grid.getBoundingClientRect();
 		var style = d.style;
 
 		style.top = location.top + 'px';

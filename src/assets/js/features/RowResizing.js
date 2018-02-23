@@ -1,6 +1,7 @@
 import FeatureBase from './FeatureBase.js';
+import ColumnResizing from './ColumnResizing.js';
 
-export default class RowResizing extends FeatureBase {
+export default class RowResizing extends ColumnResizing {
 
 	constructor() {
 		super();
@@ -20,7 +21,6 @@ export default class RowResizing extends FeatureBase {
 	getGridCellValue(gridCell) {
 		return gridCell.x;
 	}
-
 
 	getScrollValue(grid) {
 		return grid.getVScrollValue();

@@ -3,6 +3,9 @@ import CellClick from '../features/CellClick.js';
 import CellSelection from '../features/CellSelection.js';
 import ThumbwheelScrolling from '../features/ThumbwheelScrolling.js';
 import ColumnSorting from '../features/ColumnSorting.js';
+import ColumnResizing from '../features/ColumnResizing.js';
+import ColumnMoving from '../features/ColumnMoving.js';
+import RowResizing from '../features/RowResizing.js';
 import OnHover from '../features/OnHover.js';
 import ColumnAutosizing from '../features/ColumnAutosizing.js';
 import CellProvider from '../CellProvider.js';
@@ -218,15 +221,15 @@ export default class ModelBase {
 		this.setNextFeature(new KeyPaging());
 		this.setNextFeature(new CellClick());
 		// this.setNextFeature(document.createElement('fin-hypergrid-feature-overlay'));
-		// this.setNextFeature(document.createElement('fin-hypergrid-feature-column-resizing'));
-		// this.setNextFeature(document.createElement('fin-hypergrid-feature-row-resizing'));
+		this.setNextFeature(new ColumnResizing());
+		// this.setNextFeature(new RowResizing());
 		this.setNextFeature(new CellSelection());
-		// this.setNextFeature(document.createElement('fin-hypergrid-feature-column-moving'));
+		this.setNextFeature(new ColumnMoving());
 		this.setNextFeature(new ThumbwheelScrolling());
 		// this.setNextFeature(document.createElement('fin-hypergrid-feature-cell-editing'));
 		this.setNextFeature(new ColumnSorting());
 		this.setNextFeature(new OnHover());
-		this.setNextFeature(new ColumnAutosizing());
+		//this.setNextFeature(new ColumnAutosizing());
 
 		this.featureChain.initializeOn(grid);
 	}

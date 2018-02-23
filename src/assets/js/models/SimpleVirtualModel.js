@@ -20,7 +20,6 @@ export default class SimpleVirtualModel extends ModelBase {
 			rows: 0
 		};
 		this.sorted = {};
-		this.sortStates = ['', ' ^', ' v', ' |^|', ' |v|'];
 		this.ws = null;
 		this.reconnect();
 		this.scrollPositionY = 0;

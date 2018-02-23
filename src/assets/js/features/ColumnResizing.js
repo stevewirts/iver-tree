@@ -95,7 +95,7 @@ export default class ColumnResizing extends FeatureBase { /* jshint ignore:line 
 		const gridCell = event.gridCell;
 		const overArea = this.overAreaDivider(grid, event);
 		if (overArea > -1 && this.getGridCellValue(gridCell) < this.getOtherFixedAreaCount(grid)) {
-			const scrollValue = this.getScrollValue(grid);
+			let scrollValue = this.getScrollValue(grid);
 			const fixedAreaCount = this.getFixedAreaCount(grid);
 			this.dragIndex = overArea - 1;
 			this.dragStart = this.getMouseValue(event);
@@ -119,7 +119,7 @@ export default class ColumnResizing extends FeatureBase { /* jshint ignore:line 
 			const self = this;
 			setTimeout(function() {
 				self.attachChain();
-			} 200);
+			}, 200);
 		} else if (this.next) {
 			this.next.handleMouseUp(grid, event);
 		}
