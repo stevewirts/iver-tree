@@ -23,10 +23,22 @@
 	    const app = document.querySelector('#app');
 	    const behavior = new VGrid.SimpleVirtualModel('ws://localhost:5000', 'trade');
 	    const vtable = new VGrid.VGrid(app, behavior);
-        // vtable.oncontextmenu = (evt) => {
-        //     console.dir(evt);
-        // };
-        vtable.addGlobalProperties({scrollbarHoverOff: 'visible'});
+        // vtable.addGlobalProperties({scrollbarHoverOff: 'visible'});
+        // vtable.addEventListener('canvas-dragstart', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-dragend', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-drag', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-mousemove', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-mousedown', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-mouseup', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-mouseout', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-wheelmoved', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-click', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-keydown', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-dblclick', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-keyup', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-focus-gained', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-focus-lost', (evt)=>console.log(evt.type + ' ' + Date.now()));
+        // vtable.addEventListener('canvas-context-menu', (evt)=>console.log(evt.type + ' ' + Date.now()));
 	});
 </script>
 

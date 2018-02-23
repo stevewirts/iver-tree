@@ -207,7 +207,7 @@ export default class VGrid {
 	}
 
 	addEventListener(eventName, callback) {
-		this.containerDiv.addEventListener(eventName, callback);
+		this.canvas.addEventListener(eventName, callback);
 	}
 
 	appendChild(node) {
