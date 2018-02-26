@@ -1185,8 +1185,8 @@ export default class VGrid {
 		var hoverClassOver = self.resolveProperty('scrollbarHoverOver');
 		var hoverClassOff = self.resolveProperty('scrollbarHoverOff');
 		if (!self.resolveProperty('scrollingEnabled')) {
-			hoverClassOver = 'hidden';
-			hoverClassOff = 'hidden';
+			hoverClassOver = 'sb-hidden';
+			hoverClassOff = 'sb-hidden';
 		}
 		if (type === 'scroll-x') {
 			self.sbHScroller.containerDiv.classList.remove(hoverClassOff);
