@@ -531,35 +531,6 @@ export default class VGridRenderer extends CanvasComponent {
 			}
 		}
 
-		//main area vertical grid lines
-		//gc.beginPath();
-		gc.moveTo(0, 0);
-		x = offsetX;
-		var previousInsertionBoundsCursorValue = 0;
-		//render the final line with numColumns + 1
-		for (c = 0; c < numColumns + 1; c++) {
-			width = this.getColumnWidth(c + scrollLeft);
-
-			this.renderedColumns.push(c + scrollLeft);
-
-			if (x > viewWidth || numColumns < scrollLeft + c) {
-				this.renderedColumns.length = Math.max(0, this.renderedColumns.length - 2);
-				break;
-			}
-			if (drawThemV) {
-				gc.moveTo(x + 0.5, 0);
-				gc.lineTo(x + 0.5, viewHeight);
-				//gc.stroke();
-			}
-			x = x + width;
-
-			this.renderedColumnWidths.push(Math.round(x));
-
-			insertionBoundsCursor = insertionBoundsCursor + Math.round(width / 2) + previousInsertionBoundsCursorValue;
-			this.insertionBounds.push(insertionBoundsCursor);
-			previousInsertionBoundsCursorValue = Math.round(width / 2);
-		}
-
 		//main area horizontal grid lines
 		//gc.beginPath();
 		gc.moveTo(0, 0);
@@ -583,6 +554,41 @@ export default class VGridRenderer extends CanvasComponent {
 			this.renderedHeight = this.renderedHeight + height;
 			this.renderedRowHeights.push(Math.round(y));
 		}
+
+
+
+		//main area vertical grid lines
+		//gc.beginPath();
+		gc.moveTo(0, 0);
+		x = offsetX;
+		var previousInsertionBoundsCursorValue = 0;
+		const finalRowNum = this.getBehavior().getRowCount() - 1;
+		const finalRowHideHeight = this.renderedRows[this.renderedRows.length - 1] === finalRowNum ? (height - 4) : 0;
+		for (c = 0; c < numColumns + 1; c++) {
+			width = this.getColumnWidth(c + scrollLeft);
+
+			this.renderedColumns.push(c + scrollLeft);
+
+			if (x > viewWidth || numColumns < scrollLeft + c) {
+				this.renderedColumns.length = Math.max(0, this.renderedColumns.length - 2);
+				break;
+			}
+			if (drawThemV) {
+				gc.moveTo(x + 0.5, 0);
+				gc.lineTo(x + 0.5, viewHeight - finalRowHideHeight);
+				//gc.stroke();
+			}
+			x = x + width;
+
+			this.renderedColumnWidths.push(Math.round(x));
+
+			insertionBoundsCursor = insertionBoundsCursor + Math.round(width / 2) + previousInsertionBoundsCursorValue;
+			this.insertionBounds.push(insertionBoundsCursor);
+			previousInsertionBoundsCursorValue = Math.round(width / 2);
+		}
+
+
+
 		gc.stroke();
 		gc.closePath();
 	}
