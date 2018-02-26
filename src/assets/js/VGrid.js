@@ -262,31 +262,31 @@ export default class VGrid {
 		if (this.hasMouse() && hoverClassOff === 'visible') {
 
 			if (this.needsVerticalScrollbar() && this.hasFocus) {
-				this.sbVScroller.containerDiv.classList.remove('visible');
-				this.sbVScroller.containerDiv.classList.remove('hidden');
-				this.sbVScroller.containerDiv.classList.add('visible');				
+				this.sbVScroller.containerDiv.classList.remove('sb-visible');
+				this.sbVScroller.containerDiv.classList.remove('sb-hidden');
+				this.sbVScroller.containerDiv.classList.add('sb-visible');				
 			} else {
-				this.sbVScroller.containerDiv.classList.remove('visible');
-				this.sbVScroller.containerDiv.classList.remove('hidden');
-				this.sbVScroller.containerDiv.classList.add('hidden');	
+				this.sbVScroller.containerDiv.classList.remove('sb-visible');
+				this.sbVScroller.containerDiv.classList.remove('sb-hidden');
+				this.sbVScroller.containerDiv.classList.add('sb-hidden');	
 			}
 
 			if (this.needsHorizontalScrollbar() && this.hasFocus) {
-				this.sbHScroller.containerDiv.classList.remove('visible');
-				this.sbHScroller.containerDiv.classList.remove('hidden');
-				this.sbHScroller.containerDiv.classList.add('visible');				
+				this.sbHScroller.containerDiv.classList.remove('sb-visible');
+				this.sbHScroller.containerDiv.classList.remove('sb-hidden');
+				this.sbHScroller.containerDiv.classList.add('sb-visible');				
 			} else {
-				this.sbHScroller.containerDiv.classList.remove('visible');
-				this.sbHScroller.containerDiv.classList.remove('hidden');
-				this.sbHScroller.containerDiv.classList.add('hidden');	
+				this.sbHScroller.containerDiv.classList.remove('sb-visible');
+				this.sbHScroller.containerDiv.classList.remove('sb-hidden');
+				this.sbHScroller.containerDiv.classList.add('sb-hidden');	
 			}
 		} else {
-			this.sbHScroller.containerDiv.classList.remove('hidden');
-			this.sbVScroller.containerDiv.classList.remove('hidden');
-			this.sbHScroller.containerDiv.classList.remove('visible');
-			this.sbVScroller.containerDiv.classList.remove('visible');
-			this.sbHScroller.containerDiv.classList.add('hidden');
-			this.sbVScroller.containerDiv.classList.add('hidden');			
+			this.sbHScroller.containerDiv.classList.remove('sb-hidden');
+			this.sbVScroller.containerDiv.classList.remove('sb-hidden');
+			this.sbHScroller.containerDiv.classList.remove('sb-visible');
+			this.sbVScroller.containerDiv.classList.remove('sb-visible');
+			this.sbHScroller.containerDiv.classList.add('sb-hidden');
+			this.sbVScroller.containerDiv.classList.add('sb-hidden');			
 		}
 	}
 

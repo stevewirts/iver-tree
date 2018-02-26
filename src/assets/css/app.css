@@ -2,11 +2,11 @@
 
 } 
 
-.visible {
+.sb-visible {
     opacity: 0.75;
 }
 
-.hidden {
+.sb-hidden {
     opacity: 0.0;
 }
 
