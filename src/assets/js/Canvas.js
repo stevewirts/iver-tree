@@ -166,7 +166,7 @@ export default class Canvas {
 		this.dragstart = Rectangles.point.create(-1, -1);
 		//this.origin = Rectangles.point.create(0, 0);
 		this.bounds = Rectangles.rectangle.create(0, 0, 0, 0);
-		this.hasMouse = false;
+
 
 		this.containerDiv.onmouseover = function() {
 			self.hasMouse = true;
@@ -203,6 +203,10 @@ export default class Canvas {
 		this.addGenericListener(this, 'mouseout', function(e) {
 			self.hasMouse = false;
 			self.mouseout(e);
+		});
+		this.addGenericListener(this, 'mouseenter', function(e) {
+			self.hasMouse = true;
+			self.mouseenter(e);
 		});
 		this.addGenericListener(this, 'click', function(e) {
 			self.click(e);
@@ -559,6 +563,19 @@ export default class Canvas {
 			}
 		}));
 		//this.mouseLocation = Rectangles.point.create(-1, -1);
+	}
+	
+	mouseenter(e) {
+		if (!this.mouseButtonDown) {
+			this.mouseLocation = Rectangles.point.create(-1, -1);
+		}
+		this.dispatchEvent(new CustomEvent('canvas-mouseenter', {
+			detail: {
+				primitiveEvent: e,
+				mouse: this.mouseLocation,
+				keys: this.currentKeys
+			}
+		}));
 	}
 
 	mouseout(e) {

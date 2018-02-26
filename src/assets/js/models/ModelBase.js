@@ -531,6 +531,13 @@ export default class ModelBase {
 		}
 	}
 
+	handleMouseEnter(grid, event) {
+		if (this.featureChain) {
+			this.featureChain.handleMouseEnter(grid, event);
+			this.setCursor(grid);
+		}
+	}
+
 	_getCellEditorAt(x, y) {
 		noop(y);
 		x = this.translateColumnIndex(x);

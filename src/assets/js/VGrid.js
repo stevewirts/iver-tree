@@ -91,6 +91,19 @@ const DEFAULT_PROPERTIES = {
 	autoScrollAcceleration: true
 };
 
+// one global listener for the mouse wheel
+document.addEventListener('wheel', e=>{
+	const etp = e.target.parentElement;
+	if (etp && etp.parentElement.grid) {
+		e.preventDefault();
+		const grid = etp.parentElement.grid;
+		var mouse = grid.getCanvas().mouseLocation;
+		var mouseEvent = grid.getGridCellFromMousePoint(mouse);
+		mouseEvent.primitiveEvent = e;
+		grid.delegateWheelMoved(mouseEvent);
+	}
+});
+
 
 const GLOBAL_PROPERTIES = Object.create(DEFAULT_PROPERTIES);
 
@@ -184,6 +197,8 @@ export default class VGrid {
 	}
 
 	initContainerDiv() {
+		this.containerDiv.classList.add('vgrid-container');
+		this.containerDiv.grid = this;
 		const s = this.containerDiv.style;
 		s.position = 'absolute';
 		s.top = '0';
@@ -218,21 +233,53 @@ export default class VGrid {
 		return this.containerDiv.getBoundingClientRect();
 	}
 
-	checkScrollbarVisibility() {
-		var hoverClassOver = this.resolveProperty('scrollbarHoverOver');
-		var hoverClassOff = this.resolveProperty('scrollbarHoverOff');
+	mouseEntered() {
+		this.checkScrollbarVisibility();
+	}
 
-		if (hoverClassOff === 'visible') {
-			// this.sbHScroller.containerDiv.classList.remove(hoverClassOver);
-			// this.sbVScroller.containerDiv.classList.remove(hoverClassOver);
-			// this.sbHScroller.containerDiv.classList.remove(hoverClassOff);
-			// this.sbVScroller.containerDiv.classList.remove(hoverClassOff);
-			this.sbHScroller.containerDiv.classList.remove('visible');
-			this.sbVScroller.containerDiv.classList.remove('visible');
-			this.sbHScroller.containerDiv.classList.remove('hidden');
-			this.sbVScroller.containerDiv.classList.remove('hidden');
-			this.sbHScroller.containerDiv.classList.add('visible');
-			this.sbVScroller.containerDiv.classList.add('visible');
+	mouseExited() {
+		this.checkScrollbarVisibility();
+	}
+
+	needsVerticalScrollbar() {
+		const count = this.getRowCount();
+		const visibleNow  = this.getViewableRows();
+		return visibleNow <= count;
+	}
+
+	needsHorizontalScrollbar() {
+		const count = this.getColumnCount();
+		const visibleNow  = this.getViewableColumns();
+		return visibleNow <= count;
+	}
+
+	checkScrollbarVisibility() {
+
+		const hoverClassOff = 'visible';
+		// var hoverClassOver = this.resolveProperty('scrollbarHoverOver');
+		// var hoverClassOff = this.resolveProperty('scrollbarHoverOff');
+
+		if (this.hasMouse() && hoverClassOff === 'visible') {
+
+			if (this.needsVerticalScrollbar() && this.hasFocus) {
+				this.sbVScroller.containerDiv.classList.remove('visible');
+				this.sbVScroller.containerDiv.classList.remove('hidden');
+				this.sbVScroller.containerDiv.classList.add('visible');				
+			} else {
+				this.sbVScroller.containerDiv.classList.remove('visible');
+				this.sbVScroller.containerDiv.classList.remove('hidden');
+				this.sbVScroller.containerDiv.classList.add('hidden');	
+			}
+
+			if (this.needsHorizontalScrollbar() && this.hasFocus) {
+				this.sbHScroller.containerDiv.classList.remove('visible');
+				this.sbHScroller.containerDiv.classList.remove('hidden');
+				this.sbHScroller.containerDiv.classList.add('visible');				
+			} else {
+				this.sbHScroller.containerDiv.classList.remove('visible');
+				this.sbHScroller.containerDiv.classList.remove('hidden');
+				this.sbHScroller.containerDiv.classList.add('hidden');	
+			}
 		} else {
 			this.sbHScroller.containerDiv.classList.remove('hidden');
 			this.sbVScroller.containerDiv.classList.remove('hidden');
@@ -495,6 +542,10 @@ export default class VGrid {
 	hasFocus() {
 		return this.getCanvas().hasFocus();
 	}
+	
+	hasMouse() {
+		return this.getCanvas().hasMouse;
+	}
 
 	clearSelections() {
 		this.getSelectionModel().clear();
@@ -748,14 +799,15 @@ export default class VGrid {
 			self.delegateDoubleClick(mouseEvent);
 		});
 
-		this.addFinEventListener('canvas-wheelmoved', function(e) {
-			var mouse = e.detail.mouse;
-			var mouseEvent = self.getGridCellFromMousePoint(mouse);
-			mouseEvent.primitiveEvent = e.detail.primitiveEvent;
-			self.delegateWheelMoved(mouseEvent);
-		});
+		// this.addFinEventListener('canvas-wheelmoved', function(e) {
+		// 	var mouse = e.detail.mouse;
+		// 	var mouseEvent = self.getGridCellFromMousePoint(mouse);
+		// 	mouseEvent.primitiveEvent = e.detail.primitiveEvent;
+		// 	self.delegateWheelMoved(mouseEvent);
+		// });
 
 		this.addFinEventListener('canvas-mouseout', function(e) {
+			self.mouseExited(e);
 			if (self.resolveProperty('readOnly')) {
 				return;
 			}
@@ -763,6 +815,17 @@ export default class VGrid {
 			var mouseEvent = self.getGridCellFromMousePoint(mouse);
 			mouseEvent.primitiveEvent = e.detail.primitiveEvent;
 			self.delegateMouseExit(mouseEvent);
+		});
+
+		this.addFinEventListener('canvas-mouseenter', function(e) {
+			self.mouseEntered(e);
+			if (self.resolveProperty('readOnly')) {
+				return;
+			}
+			var mouse = e.detail.mouse;
+			var mouseEvent = self.getGridCellFromMousePoint(mouse);
+			mouseEvent.primitiveEvent = e.detail.primitiveEvent;
+			self.delegateMouseEnter(mouseEvent);
 		});
 
 		// this.canvas.removeAttribute('tabindex');
@@ -800,6 +863,11 @@ export default class VGrid {
 	delegateWheelMoved(event) {
 		var behavior = this.getBehavior();
 		behavior.onWheelMoved(this, event);
+	}
+
+	delegateMouseEnter(event) {
+		var behavior = this.getBehavior();
+		behavior.handleMouseEnter(this, event);
 	}
 
 	delegateMouseExit(event) {
