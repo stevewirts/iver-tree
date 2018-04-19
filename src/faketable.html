@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>vgrid</title>
+    <style>
+        body {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        .abs {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .grid {
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+     <div class="abs">
+        <div id="grid1" class="grid"></div>
+    </div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function(event) { 
+	    const behavior1 = new VGrid.FakeTableModel();
+	    const vtable1 = new VGrid.VGrid(document.querySelector('#grid1'), behavior1);
+	});
+</script>
+
+</body>
+</html>

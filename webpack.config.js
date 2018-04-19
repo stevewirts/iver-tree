@@ -65,6 +65,10 @@ const config = {
       template: 'simpletable.html'
     }),
     new HtmlWebpackPlugin({
+      filename: 'faketable.html',
+      template: 'faketable.html'
+    }),
+    new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html'
     }),

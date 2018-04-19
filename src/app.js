@@ -6,6 +6,7 @@ import PassiveVirtualModel from './assets/js/models/PassiveVirtualModel.js';
 import QTreeModel from './assets/js/models/QTreeModel.js';
 import IVGrid from './assets/js/VGrid.js';
 import CellProvider from './assets/js/CellProvider.js';
+import FakeTableModel from './assets/js/models/FakeDataModel.js';
 
 const VGrid = {
 	VGrid: IVGrid,
@@ -13,7 +14,8 @@ const VGrid = {
 	SimpleVirtualModel,
 	PassiveVirtualModel,
 	QTreeModel,
-	CellProvider
+	CellProvider,
+	FakeTableModel
 }
 
 window.VGrid = VGrid;
