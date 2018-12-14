@@ -1,6 +1,6 @@
 # iver-tree
-iver-tree is a super fast virtual grid renderer
-it works with both the q examples proved and steve apters hyper-tree project
+iver-tree is a super fast virtual grid renderer,
+this works with both q examples provided and steve apters hyper-tree project https://github.com/stevanapter/hypertree
 
 to run
 
