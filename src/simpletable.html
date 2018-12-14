@@ -16,38 +16,26 @@
             left: 0;
             right: 0;
         }
-        .top {
+        .hg-grid {
             position: absolute;
             top: 0;
-            bottom: 50%;
-            left: 0;
-            right: 0;
-            margin-bottom: 15px;
-        }
-        .bottom {
-            position: absolute;
-            top: 50%;
             bottom: 0;
             left: 0;
             right: 0;
+            margin-bottom: 15px;
         }
 
     </style>
 </head>
 <body>
 
-     <div class="abs">
-        <div id="grid1" class="top"></div>
-        <div id="grid2" class="bottom"></div>
+        <div id="grid1" class="hg-grid"></div>
     </div>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function(event) { 
 	    const behavior1 = new VGrid.SimpleVirtualModel('ws://localhost:5000', 'trade');
 	    const vtable1 = new VGrid.VGrid(document.querySelector('#grid1'), behavior1);
-
-        const behavior2 = new VGrid.SimpleVirtualModel('ws://localhost:5000', 'trade');
-        const vtable2 = new VGrid.VGrid(document.querySelector('#grid2'), behavior2);
 
         // vtable.addGlobalProperties({scrollbarHoverOff: 'visible'});
         // vtable.addEventListener('canvas-dragstart', (evt)=>console.log(evt.type + ' ' + Date.now()));
